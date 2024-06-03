@@ -1,11 +1,12 @@
 import customtkinter as ctk
 from customtkinter import filedialog
 from backend import build_executable
+import os
 
 ctk.set_appearance_mode('system')
 ctk.set_default_color_theme('green')
 
-font = ('JetBrains Mono', 10)
+font = ('Helvetica', 10)
 
 window = ctk.CTk()
 window.title('python executable')
@@ -13,8 +14,8 @@ window.geometry('400x300')
 window.iconbitmap('C:\\Users\\retr0\\Documents\\python3\\resources\\1492608046-7-docs-document-file-data-google-suits_83383.ico')
 
 global_var_options = False
-global_var_filename = ''
-global_var_name = ''
+global_var_filename = False
+global_var_name = ctk.StringVar()
 global_var_windowed = False
 global_var_icon = False
 
@@ -38,10 +39,16 @@ def askfileicon():
 def get_path():
     global global_var_filename
     global_var_filename = filedialog.askopenfilename()
+    filename = os.path.basename(global_var_filename)
+    load_app.configure(text=filename)
+    load_app.update()
 
 def init_build():
+    output_label = ctk.CTkLabel(subframe, text=f"building {global_var_name.get()}.exe started...", font=font)
+    output_label.pack(side='right', pady=5)
+    subframe.update()
     build_app.configure(text="Building...")
-    build_executable(global_var_name, True, global_var_windowed, global_var_icon)
+    build_executable(global_var_filename, True, global_var_windowed, global_var_icon, global_var_name.get())
 
 frame1 = ctk.CTkFrame(window)
 frame1.pack(expand=True, fill='both', padx=5, pady=5)
